@@ -6,9 +6,14 @@ import { config } from "../config.js";
 const LEVELS = { debug: 10, info: 20, warn: 30, error: 40 } as const;
 type Level = keyof typeof LEVELS;
 
+/** Workers has no MCP-on-stdout concern, and its log viewer keys severity off the console method. */
+const ON_WORKERS = globalThis.navigator?.userAgent === "Cloudflare-Workers";
+
 function emit(level: Level, msg: string, fields?: Record<string, unknown>) {
   if (LEVELS[level] < LEVELS[config.logLevel]) return;
-  console.error(JSON.stringify({ t: new Date().toISOString(), level, msg, ...fields }));
+  const line = JSON.stringify({ t: new Date().toISOString(), level, msg, ...fields });
+  if (ON_WORKERS) console[level === "debug" ? "debug" : level === "info" ? "log" : level](line);
+  else console.error(line);
 }
 
 export const log = {

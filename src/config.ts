@@ -2,9 +2,7 @@
  * Every environment variable the server reads, parsed in one place.
  * Modules import `config` instead of touching process.env themselves.
  */
-import { createRequire } from "node:module";
-
-const pkg = createRequire(import.meta.url)("../package.json") as { name: string; version: string };
+import { PACKAGE_NAME, VERSION } from "./version.js";
 
 const REPO_URL = "https://github.com/anikal2001/Sparrow-MCP";
 
@@ -22,8 +20,8 @@ function list(raw: string | undefined): string[] | undefined {
 }
 
 export const config = {
-  server: { name: "sparrow", version: pkg.version },
-  userAgent: process.env.SPARROW_USER_AGENT ?? `${pkg.name}/${pkg.version} (+${REPO_URL})`,
+  server: { name: "sparrow", version: VERSION },
+  userAgent: process.env.SPARROW_USER_AGENT ?? `${PACKAGE_NAME}/${VERSION} (+${REPO_URL})`,
   sparrow: {
     baseUrl: (process.env.SPARROW_BASE_URL ?? "https://sparrowshare.com").replace(/\/$/, ""),
     timeoutMs: num("SPARROW_TIMEOUT_MS", 20000),

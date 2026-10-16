@@ -78,6 +78,18 @@ HOST=0.0.0.0 PORT=3000 ALLOWED_HOSTS=sparrow-mcp.example.com npm run start:http
 
 The HTTP server is stateless, so it can run behind any load balancer. `GET /healthz` returns `{"ok":true}`.
 
+### Cloudflare Workers (free hosting)
+
+`src/worker.ts` runs the same server on Cloudflare Workers, which is free up to roughly 100k requests a day and has no cold starts.
+
+```bash
+npx wrangler login      # once
+npm run dev:worker      # local, http://localhost:8787/mcp
+npm run deploy          # https://sparrow-mcp.<your-subdomain>.workers.dev/mcp
+```
+
+Set environment variables under `vars` in `wrangler.jsonc`, or as secrets with `npx wrangler secret put NAME`. `HOST`, `PORT` and `ALLOWED_HOSTS` don't apply on Workers. Each Worker isolate has its own geocode cache and throttle, so heavy traffic can exceed public Nominatim's 1 request/second policy. Point `SPARROW_GEOCODER_URL` at a keyed geocoder if usage grows.
+
 ## Configuration
 
 All optional, via environment variables:
@@ -122,6 +134,8 @@ src/prompts/*.prompts.ts      registerPrompts(ctx)
 src/server.ts                 createServer(): wires tools and prompts onto a fresh McpServer
 src/stdio.ts                  local entry point (Claude Desktop, Claude Code)
 src/http-app.ts, http.ts      Streamable HTTP app factory and entry point (ChatGPT, claude.ai connectors)
+src/worker.ts                 Cloudflare Workers entry point (web-standard transport, same tools)
+src/version.ts                package name and version as constants (checked against package.json by a test)
 ```
 
 To add a tool: put its zod schemas in `src/types`, write `registerFooTools(ctx)` in `src/tools/foo.tools.ts` returning plain data (throw `badInput(...)` for caller mistakes), and call it from `createServer`.
