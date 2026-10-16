@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sparrow": {
+      "command": "node",
+      "args": ["dist/stdio.js"]
+    }
+  }
+}

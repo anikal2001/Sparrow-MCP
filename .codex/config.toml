@@ -1,0 +1,3 @@
+[mcp_servers.sparrow]
+command = "node"
+args = ["dist/stdio.js"]

@@ -1,0 +1,41 @@
+{
+  "name": "sparrow-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that lets Claude, ChatGPT and other MCP clients search rooms on sparrowshare.com with natural language",
+  "main": "dist/stdio.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/stdio.js",
+    "start:http": "node dist/http.js",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:live": "npm run build && node scripts/smoke.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "express": "^5.3.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^3.2.4"
+  },
+  "type": "module",
+  "bin": {
+    "sparrow-mcp": "dist/stdio.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
