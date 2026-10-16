@@ -80,15 +80,19 @@ The HTTP server is stateless, so it can run behind any load balancer. `GET /heal
 
 ### Cloudflare Workers (free hosting)
 
-`src/worker.ts` runs the same server on Cloudflare Workers, which is free up to roughly 100k requests a day and has no cold starts.
+`src/worker.ts` runs the same server on Cloudflare Workers, which is free up to roughly 100k requests a day and has no cold starts. Deploys use the [`cf` CLI](https://developers.cloudflare.com/cf/) and `cloudflare.config.ts`.
+
+Live: `https://sparrow-mcp.andrew-ea8.workers.dev/mcp`
 
 ```bash
-npx wrangler login      # once
-npm run dev:worker      # local, http://localhost:8787/mcp
-npm run deploy          # https://sparrow-mcp.<your-subdomain>.workers.dev/mcp
+cf auth login           # once; cf keeps its own credentials
+npm run dev:worker      # cf dev, local at http://127.0.0.1:8787/mcp
+npm run deploy          # cf deploy
 ```
 
-Set environment variables under `vars` in `wrangler.jsonc`, or as secrets with `npx wrangler secret put NAME`. `HOST`, `PORT` and `ALLOWED_HOSTS` don't apply on Workers. Each Worker isolate has its own geocode cache and throttle, so heavy traffic can exceed public Nominatim's 1 request/second policy. Point `SPARROW_GEOCODER_URL` at a keyed geocoder if usage grows.
+Set environment variables in `worker.env` in `cloudflare.config.ts` (e.g. `ALLOWED_ORIGINS: bindings.text("https://...")`). `HOST`, `PORT` and `ALLOWED_HOSTS` don't apply on Workers. For live logs, which `cf` doesn't support yet, run `npx wrangler tail sparrow-mcp`.
+
+Each Worker isolate has its own geocode cache and throttle, so heavy traffic can exceed public Nominatim's 1 request/second policy. Point `SPARROW_GEOCODER_URL` at a keyed geocoder if usage grows.
 
 ## Configuration
 
