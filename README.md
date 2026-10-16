@@ -35,6 +35,23 @@ npm install
 npm run build
 ```
 
+### claude.ai (hosted, no install)
+
+A public instance runs on Cloudflare Workers at `https://sparrow-mcp.andrew-ea8.workers.dev/mcp`. To add it as a custom connector:
+
+1. Go to **claude.ai → Settings → Connectors**.
+2. Click **Add custom connector**.
+3. Enter:
+   - **Name:** `Sparrow`
+   - **Remote MCP server URL:** `https://sparrow-mcp.andrew-ea8.workers.dev/mcp`
+   - Leave the **OAuth** fields blank. The server needs no authentication.
+4. Click **Add**.
+5. In a new chat, open the tools menu (the **+** or sliders icon) and turn **Sparrow** on.
+
+Try *"Find me a private room in Toronto under $1000 a month."* Claude should call `search_rooms` and reply with listings and links. The `find_a_room` prompt is under the **+** menu.
+
+On Team and Enterprise plans, an Owner may need to add custom connectors in the organization's settings, which makes them available to everyone in the org. Connectors added on claude.ai also show up in the Claude desktop and mobile apps.
+
 ### Claude Desktop
 
 Add to `claude_desktop_config.json` (Settings, Developer, Edit Config). Use the absolute path to this folder:
